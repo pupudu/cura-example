@@ -29,6 +29,11 @@ export default ({App, index, manifest, store}) => (req, res, next) => {
       </Loadable.Capture>
     );
 
+    if (context.url) {
+      console.log(context);
+      return res.redirect(context.status || 301, context.url);
+    }
+
     // get the stringified state
     const reduxState = JSON.stringify(store.getState());
 
