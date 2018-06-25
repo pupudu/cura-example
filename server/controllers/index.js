@@ -25,14 +25,13 @@ const actionIndex = (req, res, next) => {
   next();
 };
 
+router.use(express.static(
+// other static resources should just be served as they are
+path.resolve(__dirname, '..', '..', 'build'),
+{ maxAge: '30d' },
+));
 
 // root (/) should always serve our server rendered page
-router.use('^/$', actionIndex, serverRenderer);
-
-// other static resources should just be served as they are
-router.use(express.static(
-  path.resolve(__dirname, '..', '..', 'build'),
-  { maxAge: '30d' },
-));
+router.use('^/', actionIndex, serverRenderer);
 
 export default router;
