@@ -4,7 +4,7 @@ import { all } from 'redux-saga/effects';
 import {createFetchSaga} from './fetch/fetchSaga';
 
 // Create a fetch saga
-//let fetchSaga = createFetchSaga({});
+let fetchSaga = createFetchSaga({});
 
 
 /**
@@ -12,6 +12,6 @@ import {createFetchSaga} from './fetch/fetchSaga';
  */
 export default function* rootSaga() {
   yield all([
-    // fetchSaga(),
+    fetchSaga(),
   ]);
 }
