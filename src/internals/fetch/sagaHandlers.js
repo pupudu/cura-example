@@ -4,14 +4,13 @@ import {HTTP_METHODS, HTTP_CODES} from './constants';
 /**
  * Perform a fetch based on the meta data available corresponding to the request type
  *
- * @param {object} metadata - fetch metadata object
- * @param {string} key - key of the request type to get required metadata for the request
+ * @param {object} entry - fetch metadata object entry
  * @param {object} payload - Query params or post body(Will be switched based on HTTP method)
  * @returns {Promise} - response data from backend
  */
-export async function fetchHandler(metadata, {key, payload}) {
+export async function fetchHandler(entry, payload) {
 
-  let {url, options} = metadata[key];
+  let {url, options} = entry;
   // Note - metadata will not be validated here expecting that the metadata file is perfect and predictable
 
   // Cloned to avoid later assigned values being persistent across requests
@@ -49,7 +48,7 @@ export async function fetchHandler(metadata, {key, payload}) {
 
       // Important that we return here. Otherwise the method will throw at the end
       return {
-        replyAction: metadata[key].replies[res.status],
+        replyAction: entry.replies[res.status],
         res: res.data
       };
     }
@@ -59,11 +58,11 @@ export async function fetchHandler(metadata, {key, payload}) {
     err.data = res.data;
 
     // Check if a dedicated failure action is available
-    if (metadata[key].replies[res.status]) {
-      err.replyAction = metadata[key].replies[res.status];
+    if (entry.replies[res.status]) {
+      err.replyAction = entry.replies[res.status];
     }
   } catch(e) {
-    e.replyAction = e.replyAction || metadata[key].replies.failure;
+    e.replyAction = e.replyAction || entry.replies.failure;
 
     // Assign fetch error to err to be thrown at the end
     err = e;
@@ -72,9 +71,9 @@ export async function fetchHandler(metadata, {key, payload}) {
   throw err;
 }
 
-export function redirectHandler(status, metadata, {key}) {
-  if (!metadata[key]) {
+export function redirectHandler(status, entry) {
+  if (!entry) {
     return;
   }
-  return (status === true) ? metadata[key].successRedirect : metadata[key].failureRedirect;
+  return (status === true) ? entry.successRedirect : entry.failureRedirect;
 }
