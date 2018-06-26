@@ -25,8 +25,9 @@ export default (url, options) =>
     // Send and Receive cookies to handle user session
     options.credentials = "include";
 
-    // Assume only json requests will be sent
-    options.headers = new Headers({
+    // Assume only json requests will be sent by default
+    // TODO: Should we just merge these two instead of conditionally assigning
+    options.headers = new Headers(options.headers || {
       "Content-Type": "application/json"
     });
 

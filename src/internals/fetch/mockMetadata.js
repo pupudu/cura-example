@@ -32,7 +32,8 @@ export default {
     },
     fetchKey: null,
     successRedirect: "",
-    failureRedirect: ""
+    failureRedirect: "",
+    headers: {}
   },
   [KEYS.RECENT_BOOK_LIST]: {
     url: URLS.RECENT_BOOK_LIST,
