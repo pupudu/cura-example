@@ -1,21 +1,24 @@
 import {call, put, takeEvery, takeLatest} from 'redux-saga/effects';
 import {push} from 'connected-react-router';
 import {REDUX_ACTIONS} from './constants';
-import {fetchHandler, redirectHandler} from './sagaHandlers';
+import {fetchHandler} from './sagaHandlers';
 
 
 /**
  * Saga Side-Effects Handler
  * @param {object} metadata - fetch metadata object
+ * @param {string} metadata.key - key of the request type to get required metadata for the request
+ * @param {object} metadata.payload - fetch body or params
  * @param {object} action - redux action
  */
 function* fetchActionHandler(metadata, action) {
 
-  let redirectUrl;
+  let fetchStatus;
+  let entry = metadata[action.key];
 
   // Handle the fetch call
   try {
-    const reply = yield call(fetchHandler, metadata, action);
+    const reply = yield call(fetchHandler, entry, action.payload);
 
     // Fire action to be used by the fetch statuses reducer
     yield put({...action, type: REDUX_ACTIONS.FETCH_SUCCESS});
@@ -32,8 +35,8 @@ function* fetchActionHandler(metadata, action) {
       yield call(action.postAction, action.payload, reply.res);
     }
 
-    // Handle redirection with status set to true
-    redirectUrl = yield call(redirectHandler, true, metadata, action);
+    // Save fetch status to redirect later
+    fetchStatus = true;
 
   } catch (error) {
     // Fire action to be used by the fetch statuses reducer
@@ -46,11 +49,15 @@ function* fetchActionHandler(metadata, action) {
       args: {...action.payload, ...action.args}
     });
 
-    // Handle redirection with status set to false
-    redirectUrl = yield call(redirectHandler, false, metadata, action);
+    // Save fetch status to redirect later
+    fetchStatus = false;
   }
 
-  put(push(redirectUrl));
+  if (fetchStatus === true && entry.successRedirect) {
+    put(push(entry.successRedirect ));
+  } else if (entry.failureRedirect){
+    put(push(entry.failureRedirect ));
+  }
 }
 
 /**

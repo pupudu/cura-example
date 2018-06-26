@@ -70,10 +70,3 @@ export async function fetchHandler(entry, payload) {
 
   throw err;
 }
-
-export function redirectHandler(status, entry) {
-  if (!entry) {
-    return;
-  }
-  return (status === true) ? entry.successRedirect : entry.failureRedirect;
-}
