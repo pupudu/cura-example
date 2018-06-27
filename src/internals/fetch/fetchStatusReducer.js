@@ -1,5 +1,5 @@
 /**
- * Created by pubudud on 5/30/17.
+ * Created by pubudud.
  */
 
 import {REDUX_ACTIONS, FETCH_STATUSES} from './constants';
