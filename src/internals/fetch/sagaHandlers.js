@@ -49,7 +49,7 @@ export async function fetchHandler(entry, payload) {
       // Important that we return here. Otherwise the method will throw at the end
       return {
         replyAction: entry.replies[res.status],
-        res: res.data
+        data: res.data
       };
     }
 
@@ -57,15 +57,15 @@ export async function fetchHandler(entry, payload) {
     err = new Error("Fetch failed");
     err.data = res.data;
 
-    // Check if a dedicated failure action is available
-    if (entry.replies[res.status]) {
-      err.replyAction = entry.replies[res.status];
-    }
-  } catch(e) {
-    e.replyAction = e.replyAction || entry.replies.failure;
+    // Check if a dedicated failure action is available, else assign the default error response
+    err.replyAction = entry.replies[res.status] || entry.replies.failure;
 
+  } catch(e) {
     // Assign fetch error to err to be thrown at the end
-    err = e;
+    err = {
+      ...e,
+      replyAction: entry.replies.failure
+    };
   }
 
   throw err;
