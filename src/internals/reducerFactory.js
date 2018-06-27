@@ -60,3 +60,27 @@ export const createReducer = (initialState, handlers) => {
     return state;
   };
 };
+
+/**
+ * Create a setter reducer for fetch actions
+ * @param actionType
+ * @param initialState
+ * @param attribute
+ * @param setAttribute
+ * @returns {Function}
+ */
+export const createFetchDataSetterReducer = (actionType, initialState = {}, attribute = "payload", setAttribute = "setKey") =>
+  (state = initialState, action) => {
+    if (!action[setAttribute]) {
+      return state;
+    }
+    switch (action.type) {
+      case actionType:
+        return {
+          ...state,
+          [state[action[setAttribute]]]: action[attribute]
+        };
+      default:
+        return state;
+    }
+  };
