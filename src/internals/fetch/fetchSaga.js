@@ -1,4 +1,4 @@
-import {call, put, takeEvery, takeLatest} from 'redux-saga/effects';
+import {call, put, takeEvery, takeLatest, takeLeading} from 'redux-saga/effects';
 import {push} from 'connected-react-router';
 import {REDUX_ACTIONS} from './constants';
 import {fetchHandler} from './sagaHandlers';
@@ -99,7 +99,7 @@ export function createFetchSaga(metadata) {
 }
 
 /**
- * Saga: Capture the last FETCH_LAST action to handle side-effects
+ * Saga: Capture the last FETCH_LATEST action to handle side-effects
  */
 export function createFetchLatestSaga(metadata) {
   if (!metadata) {
@@ -107,6 +107,19 @@ export function createFetchLatestSaga(metadata) {
   }
   return function* takeLatestFetchSaga() {
     yield takeLatest(REDUX_ACTIONS.FETCH_LATEST, fetchActionHandler, metadata);
+  }
+}
+
+
+/**
+ * Saga: Capture the last FETCH_LEADING action to handle side-effects
+ */
+export function createFetchLeadingSaga(metadata) {
+  if (!metadata) {
+    throw new Error("Fetch metadata cannot be empty!");
+  }
+  return function* takeLatestFetchSaga() {
+    yield takeLeading(REDUX_ACTIONS.FETCH_LEADING, fetchActionHandler, metadata);
   }
 }
 
