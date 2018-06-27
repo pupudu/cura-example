@@ -24,8 +24,11 @@ export default {
       }
     },
     replies: {
-      200: ACTIONS.SET_BOOK_LIST,
-      401: ACTIONS.LOGOUT,
+      200: [{
+        type: ACTIONS.GENERAL_SET,
+        setKey: KEYS.BOOK_LIST
+      }],
+      401: [ACTIONS.LOGOUT, ACTIONS.ALERT],
       400: ACTIONS.IGNORE,
       500: ACTIONS.WAIT_AND_RETRY,
       failure: ACTIONS.HANDLE_BOOK_LIST_FETCH_FAILURE
@@ -33,7 +36,8 @@ export default {
     fetchKey: null,
     successRedirect: "",
     failureRedirect: "",
-    headers: {}
+    headers: {},
+    setKey: KEYS.BOOK_LIST
   },
   [KEYS.RECENT_BOOK_LIST]: {
     url: URLS.RECENT_BOOK_LIST,
