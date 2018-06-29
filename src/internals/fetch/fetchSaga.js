@@ -1,4 +1,4 @@
-import {call, put, takeEvery, takeLatest, takeLeading} from 'redux-saga/effects';
+import {all, call, put, takeEvery, takeLatest, takeLeading} from 'redux-saga/effects';
 import {push} from 'connected-react-router';
 import {REDUX_ACTIONS} from './constants';
 import {fetchHandler} from './sagaHandlers';
@@ -31,49 +31,56 @@ export function registerPreProcessor(flag, handler) {
 }
 
 /**
- * Dispatch a generic action from provided metadata corresponding to the dispatched fetch action
+ * Create a generic action from provided metadata corresponding to the dispatched fetch action
  *
  * @param {string} type - action type to be dispatched
  * @param {any} payload - response data payload from the fetch
  * @param {object} error - any errors occurred during the fetch
  * @param {object} args - default data provided in metadata to be shipped with the action
+ * @return {object} redux action
  */
-function dispatchAction(type, payload, error, args = {}) {
-  put({
+function createReplyAction(type, payload, error, args = {}) {
+  return {
     type,
     payload,
     error,
     ...args
-  });
+  };
 }
 
 /**
- * Analyze the reply action and dispatch actions from metadata accordingly
+ * Analyze the reply action and create actions from metadata accordingly
  *
  * @param {object} reply - success or failure reply from the fetch handler
+ * @return {Array} redux actions array
  */
-function dispatchReplies(reply) {
+function getReplyActions(reply) {
+
+  let replyActions = [];
+
   if (!reply.replyAction) {
-    return;
+    return replyActions;
   }
 
   // Treat non array replies as an array with one element (to make the preceding code more meaningful)
-  let replyActions = Array.isArray(reply.replyAction) ? reply.replyAction : [reply.replyAction];
+  let replies = Array.isArray(reply.replyAction) ? reply.replyAction : [reply.replyAction];
 
-  replyActions.forEach(replyAction => {
+  replies.forEach(replyAction => {
 
     // If the reply action is a string, we will follow default behavior
     if (typeof replyAction === "string") {
-      dispatchAction(replyAction, reply.data, reply.error)
+      replyActions.push(createReplyAction(replyAction, reply.data, reply.error));
     }
 
     // If the reply action is an object, and it has a field: "type" we merge it with the dispatched action
     if (typeof replyAction === "object" && replyAction.type) {
       let metadataAction = {...replyAction};
       delete metadataAction.type;
-      dispatchAction(replyAction.type, reply.data, reply.error, metadataAction);
+      replyActions.push(createReplyAction(replyAction.type, reply.data, reply.error, metadataAction));
     }
   });
+
+  return replyActions;
 }
 
 
@@ -96,8 +103,9 @@ function* fetchActionHandler(metadata, action) {
     // Fire action to be used by the fetch statuses reducer
     yield put({...action, type: REDUX_ACTIONS.FETCH_SUCCESS});
 
-    // Fire reply action from metadata
-    yield call(dispatchReplies, reply);
+    // Fire reply action(s) from metadata
+    let replyActions = yield call(getReplyActions, reply);
+    yield all(replyActions.map(action => put(action)));
 
     // Call post fetch handler, if provided
     // Here we do not bind anything besides the response data assuming the post action is a closure
@@ -113,7 +121,8 @@ function* fetchActionHandler(metadata, action) {
     yield put({...action, type: REDUX_ACTIONS.FETCH_FAILED});
 
     // Fire reply action from metadata. Here we pass the error instead of payload
-    yield call(dispatchReplies, error);
+    let replyActions = yield call(getReplyActions, error);
+    yield all(replyActions.map(action => put(action)));
 
     // Save fetch status to redirect later
     fetchStatus = false;
