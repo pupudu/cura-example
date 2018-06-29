@@ -2,7 +2,7 @@
  * Created by pubudud.
  */
 
-import {REDUX_ACTIONS, FETCH_STATUSES} from './constants';
+import {REDUX_ACTIONS, FETCH_STATUSES} from '../constants';
 
 const getSingleFetchKeyBasedState = (state, action, status) => ({
   ...state,

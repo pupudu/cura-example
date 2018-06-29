@@ -11,7 +11,7 @@ import {
   REDUX_ACTIONS as ACTIONS,
   URLS,
   HTTP_METHODS
-} from './constants';
+} from '../constants';
 
 export default {
   [KEYS.BOOK_LIST]: {

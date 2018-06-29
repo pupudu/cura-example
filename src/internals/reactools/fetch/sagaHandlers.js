@@ -1,5 +1,5 @@
 import fetch from './api';
-import {HTTP_METHODS, HTTP_CODES} from './constants';
+import {HTTP_METHODS, HTTP_CODES} from '../constants';
 
 /**
  * Perform a fetch based on the meta data available corresponding to the request type

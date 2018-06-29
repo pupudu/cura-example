@@ -1,5 +1,5 @@
 import {all, call, put, takeEvery, takeLatest, takeLeading} from 'redux-saga/effects';
-import {REDUX_ACTIONS} from './constants';
+import {REDUX_ACTIONS} from '../constants';
 import {fetchHandler} from './sagaHandlers';
 
 

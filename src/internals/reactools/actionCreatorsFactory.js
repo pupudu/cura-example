@@ -3,7 +3,7 @@
  * Created by pubudud on 3/30/17.
  */
 
-import {REDUX_ACTIONS} from './fetch/constants';
+import {REDUX_ACTIONS} from './constants';
 
 /**
  * The factory for generic action creator
