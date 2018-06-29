@@ -67,7 +67,7 @@ export const createReducer = (initialState, handlers) => {
  * @param initialState
  * @param attribute
  * @param setAttribute
- * @returns {Function}
+ * @returns {Function} - opinionated fetch data setter reducer
  */
 export const createFetchDataSetterReducer = (actionType, initialState = {}, attribute = "payload", setAttribute = "setKey") =>
   (state = initialState, action) => {
@@ -78,7 +78,7 @@ export const createFetchDataSetterReducer = (actionType, initialState = {}, attr
       case actionType:
         return {
           ...state,
-          [state[action[setAttribute]]]: action[attribute]
+          [action[setAttribute]]: action[attribute]
         };
       default:
         return state;
