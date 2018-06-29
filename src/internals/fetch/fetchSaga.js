@@ -13,7 +13,10 @@ let preProcessors = [];
 function preProcess(entry) {
   return preProcessors.reduce((processedEntry, {flag, handler}) => {
     if (entry[flag]) {
-      return handler(processedEntry);
+      return {
+        ...processedEntry,
+        options: handler(processedEntry.options) || processedEntry.options
+      };
     }
   }, entry);
 }
