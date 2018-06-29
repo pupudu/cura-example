@@ -64,9 +64,9 @@ export const makeGenericLeadingFetcher = (key, ...argNames) => makeGenericFetche
  *
  * @param {string} type - action type
  * @param {string} key - fetch key to identify the corresponding metadata entry
- * @param {function} callback - function to execute after the fetch call. This function will receive any error and fetch response data arguments
+ * @param {function} [callback] - function to execute after the fetch call. This function will receive any error and fetch response data arguments
  *
- * @returns {function(*, *): {type: string, key: *, payload: *, postAction: *}}
+ * @returns {function(*, *): {type: string, key: *, payload: *, callback: *}}
  */
 const makeFetcherTemplate = (type, key, callback) => (payload, callbackInAction) => {
   // Give precedence to the callback in action
@@ -86,8 +86,8 @@ const makeFetcherTemplate = (type, key, callback) => (payload, callbackInAction)
  * Opinionated factory for fetcher which accepts a key for identifying the fetch metadata
  *
  * @param {string} key - fetch key to identify corresponding metadata entry
- * @param {function} callback - function to execute after the fetch call. This function will receive any error and fetch response data arguments
- * @return {function(*, *): {type: string, key: *, payload: *, postAction: *}} - opinionated action creator
+ * @param {function} [callback] - error first function to execute after the fetch call. This function will receive any error and fetch response data arguments
+ * @return {function(*, *)} - opinionated action creator
  */
 export const makeFetcher = (key, callback) => makeFetcherTemplate(REDUX_ACTIONS.FETCH, key, callback);
 
@@ -95,8 +95,8 @@ export const makeFetcher = (key, callback) => makeFetcherTemplate(REDUX_ACTIONS.
  * Similar to makeFetcher, cancel previous unfulfilled fetch calls
  *
  * @param {string} key - fetch key to identify corresponding metadata entry
- * @param {function} callback - function to execute after the fetch call. This function will receive any error and fetch response data arguments
- * @return {function(*, *): {type: string, key: *, payload: *, postAction: *}} - opinionated action creator
+ * @param {function} [callback] - error first function to execute after the fetch call. This function will receive any error and fetch response data arguments
+ * @return {function(*, *)} - opinionated action creator
  */
 export const makeLatestFetcher = (key, callback) => makeFetcherTemplate(REDUX_ACTIONS.FETCH_LATEST, key, callback);
 
@@ -104,7 +104,7 @@ export const makeLatestFetcher = (key, callback) => makeFetcherTemplate(REDUX_AC
  * Similar to makeFetcher, cancel future actions until current fetch has completed
  *
  * @param {string} key - fetch key to identify corresponding metadata entry
- * @param {function} callback - function to execute after the fetch call. This function will receive any error and fetch response data arguments
- * @return {function(*, *): {type: string, key: *, payload: *, postAction: *}} - opinionated action creator
+ * @param {function} [callback] - error first function to execute after the fetch call. This function will receive any error and fetch response data arguments
+ * @return {function(*, *)} - opinionated action creator
  */
 export const makeLeadingFetcher = (key, callback) => makeFetcherTemplate(REDUX_ACTIONS.FETCH_LEADING, key, callback);
