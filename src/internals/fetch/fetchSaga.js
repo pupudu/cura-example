@@ -93,12 +93,13 @@ function getReplyActions(reply) {
  */
 function* fetchActionHandler(metadata, action) {
 
-  let fetchStatus;
+  let reply = {};
+  let err = null;
   let entry = metadata[action.key];
 
   // Handle the fetch call
   try {
-    const reply = yield call(fetchHandler, preProcess(entry), action.payload);
+    reply = yield call(fetchHandler, preProcess(entry), action.payload);
 
     // Fire action to be used by the fetch statuses reducer
     yield put({...action, type: REDUX_ACTIONS.FETCH_SUCCESS});
@@ -106,15 +107,6 @@ function* fetchActionHandler(metadata, action) {
     // Fire reply action(s) from metadata
     let replyActions = yield call(getReplyActions, reply);
     yield all(replyActions.map(action => put(action)));
-
-    // Call post fetch handler, if provided
-    // Here we do not bind anything besides the response data assuming the post action is a closure
-    if (action.postAction) {
-      yield call(action.postAction, reply.data);
-    }
-
-    // Save fetch status to redirect later
-    fetchStatus = true;
 
   } catch (error) {
     // Fire action to be used by the fetch statuses reducer
@@ -124,11 +116,18 @@ function* fetchActionHandler(metadata, action) {
     let replyActions = yield call(getReplyActions, error);
     yield all(replyActions.map(action => put(action)));
 
-    // Save fetch status to redirect later
-    fetchStatus = false;
+    // Save error to conditionally redirect later
+    err = error;
   }
 
-  if (fetchStatus === true && entry.successRedirect) {
+  // Call post fetch handler callback, if provided
+  // Here we do not bind anything besides the response error data assuming the post action is a closure
+  if (action.callback) {
+    yield call(action.callback, err, reply.data);
+  }
+
+  // Conditionally redirect the app // TODO - can we stripout react-router stuff from the fetch saga?
+  if (!err && entry.successRedirect) {
     put(push(entry.successRedirect));
   } else if (entry.failureRedirect) {
     put(push(entry.failureRedirect));
