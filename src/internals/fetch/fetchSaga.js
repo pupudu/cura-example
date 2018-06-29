@@ -1,5 +1,4 @@
 import {all, call, put, takeEvery, takeLatest, takeLeading} from 'redux-saga/effects';
-import {push} from 'connected-react-router';
 import {REDUX_ACTIONS} from './constants';
 import {fetchHandler} from './sagaHandlers';
 
@@ -127,13 +126,6 @@ function* fetchActionHandler(metadata, action) {
   // Here we do not bind anything besides the response error data assuming the post action is a closure
   if (action.callback) {
     yield call(action.callback, err, reply.data);
-  }
-
-  // Conditionally redirect the app // TODO - can we stripout react-router stuff from the fetch saga?
-  if (!err && entry.successRedirect) {
-    put(push(entry.successRedirect));
-  } else if (entry.failureRedirect) {
-    put(push(entry.failureRedirect));
   }
 }
 
