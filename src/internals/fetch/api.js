@@ -41,7 +41,8 @@ export default (url, options) =>
         res.json()
           .then((data) => resolve({
             ...res,
-            data
+            data,
+            status: res.status
           }))
           .catch((err) => {
             // Custom error message for simplified debugging
