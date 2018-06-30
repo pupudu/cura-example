@@ -12,6 +12,7 @@
     "connected-react-router": "^4.3.0",
     "express": "^4.16.3",
     "file-loader": "^1.1.11",
+    "glob": "^7.1.2",
     "history": "^4.7.2",
     "ignore-styles": "^5.0.1",
     "react": "^16.4.1",
@@ -19,7 +20,7 @@
     "react-loadable": "^5.4.0",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
-    "react-scripts": "1.1.4",
+    "react-scripts": "2.0.0-next.3e165448",
     "redux": "^4.0.0",
     "redux-saga": "1.0.0-beta.1",
     "redux-thunk": "^2.3.0",
@@ -31,5 +32,20 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "server": "NODE_ENV=production node server/bootstrap.js"
+  },
+  "devDependencies": {
+    "babel-plugin-preval": "^3.0.0"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">0.25%",
+      "not op_mini all",
+      "ie 11"
+    ]
   }
 }
