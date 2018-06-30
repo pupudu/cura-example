@@ -30,7 +30,6 @@ export default ({App, index, manifest, store}) => (req, res, next) => {
     );
 
     if (context.url) {
-      console.log(context);
       return res.redirect(context.status || 301, context.url);
     }
 

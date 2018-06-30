@@ -2,9 +2,8 @@ import express from "express";
 import {createMemoryHistory} from 'history';
 const path = require("path");
 
-import createUniversalRenderer from '../middleware/createUniversalRenderer';
+import createUniversalRenderer from '../reactools-express/createUniversalRenderer';
 import createStore from '../../src/internals/store';
-import { setAsyncMessage } from '../../src/App/appReducer';
 import App from '../../src/App'
 
 // get the html file created with the create-react-app build
@@ -18,10 +17,7 @@ const store = createStore({}, history);
 const serverRenderer = createUniversalRenderer({App, index: filePath, manifest, store});
 
 const actionIndex = (req, res, next) => {
-  // store.dispatch(setAsyncMessage("Hi, I'm from server!"))
-  //   .then(() => {
-  //     next();
-  //   });
+  // Can dispatch a fetch action, then call next inside the action callback
   next();
 };
 
@@ -31,7 +27,17 @@ path.resolve(__dirname, '..', '..', 'build'),
 { maxAge: '30d' },
 ));
 
+router.get('/exampleEndpoint', (req, res)=>{
+  console.log(req.headers.token);
+  setTimeout(()=>{
+    res.json({
+      message: "Hello Universal App"
+    })
+  }, 5000);
+});
+
 // root (/) should always serve our server rendered page
-router.use('^/', actionIndex, serverRenderer);
+router.use('^/', serverRenderer);
+
 
 export default router;
