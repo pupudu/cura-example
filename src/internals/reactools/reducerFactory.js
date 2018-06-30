@@ -84,3 +84,5 @@ export const createFetchDataSetterReducer = (actionType, initialState = {}, attr
         return state;
     }
   };
+
+export const fetchDataSetterReducer = createFetchDataSetterReducer("SET_ITEMS");
