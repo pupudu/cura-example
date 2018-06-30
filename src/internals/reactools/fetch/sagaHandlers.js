@@ -3,6 +3,7 @@ import {HTTP_METHODS, HTTP_CODES} from '../constants';
 
 /**
  * Perform a fetch based on the meta data available corresponding to the request type
+ * Currently based on the fetch API. May need to update to support axios or any other alternative.
  *
  * @param {object} entry - fetch metadata object entry
  * @param {object} payload - Query params or post body(Will be switched based on HTTP method)

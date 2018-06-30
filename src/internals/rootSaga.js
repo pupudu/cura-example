@@ -7,7 +7,7 @@ import fetchMetadata from './rootMetadata';
 // Create a fetch saga
 let fetchSaga = createFetchSaga(fetchMetadata);
 
-// Register Pre Processors
+// Register a pre processor for attaching a token for authenticated routes automatically
 registerPreProcessor("auth", (options) => {
   options.headers = {
     ...(options.headers || {}),

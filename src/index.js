@@ -7,10 +7,8 @@ import {createBrowserHistory} from 'history';
 
 import createStore from './internals/store';
 import App from './App';
-import './index.css';
-// import registerServiceWorker from './registerServiceWorker';
 
-//ReactDOM.render(<App />, document.getElementById('root'));
+// import registerServiceWorker from './registerServiceWorker';
 //registerServiceWorker();
 
 const history = createBrowserHistory();

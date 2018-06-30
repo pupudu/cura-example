@@ -1,4 +1,13 @@
 /**
+ * This module exposes a special reducer for handling the fetch status of any fetch action processed by our fetch saga.
+ *
+ * The key based reducer doesn't require any kind of manual configurations. Works out of the box with the fetch saga.
+ *
+ * The fetch key based reducer is for handling cases where we might want to handle the fetch status based on an
+ * attribute of the fetch request/response payload.
+ * Thus to use this reducer, we need to define the fetchKey in the metadata file.
+ * If not specified, this will default to the key based reducer.
+ *
  * Created by pubudud.
  */
 
@@ -36,6 +45,13 @@ const getKeyBasedState = (state, action, status) => ({
   [action.key]: status
 });
 
+/**
+ * Default reducer for handling fetch status. Updates the status against the key in corresponding metadata entry
+ *
+ * @param {object} state - redux store branch for fetch status
+ * @param {object} action - redux action
+ * @return {*} - reduced state
+ */
 const keyBasedReducer = (state, action) => {
   switch (action.type) {
     case REDUX_ACTIONS.FETCH:
@@ -50,6 +66,15 @@ const keyBasedReducer = (state, action) => {
   }
 };
 
+/**
+ * fetch key based reducer for cases where the same key in the metadata file is used for fetching data related
+ * to different entities. In this case, we need to instruct the reducer which attribute to consider for
+ * saving the status against.
+ *
+ * @param {object} state - redux store branch for fetch status
+ * @param {object} action - redux action
+ * @return {*} - reduced state
+ */
 const fetchKeyBasedReducer = (state, action) => {
   switch (action.type) {
     case REDUX_ACTIONS.FETCH:
@@ -64,6 +89,13 @@ const fetchKeyBasedReducer = (state, action) => {
   }
 };
 
+/**
+ * Reducer factory for initializing the fetch status reducer
+ * @param {object} metadata - root fetch metadata
+ * @return {Function} - fetch status reducer
+ *
+ * TODO: rename fetchKey to fetchAttribute or something more meaningful
+ */
 export function createFetchStatusReducer(metadata) {
   return (state = {}, action) => {
     if (!action.key || !metadata[action.key])
@@ -71,9 +103,12 @@ export function createFetchStatusReducer(metadata) {
 
     const fetchKey = metadata[action.key].fetchKey;
 
+    // If a fetchKey is defined in the corresponding metadata entry, we invoke the fetchKey based reducer
     if (fetchKey) {
       return fetchKeyBasedReducer(state, {...action, fetchKey});
     }
+
+    // Default to key based reducer
     return keyBasedReducer(state, action);
   };
 }
