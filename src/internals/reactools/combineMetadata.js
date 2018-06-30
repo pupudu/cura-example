@@ -69,3 +69,5 @@ export default function () {
     }
   }, {});
 }
+
+// TODO might be able to simplify all this using import-all.macro :)

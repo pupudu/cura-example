@@ -4,6 +4,7 @@ import { connectRouter, routerMiddleware } from 'connected-react-router'
 
 import rootReducer from './rootReducer';
 import rootSaga from './rootSaga';
+import redirectMiddleware from './reactools/redirectMiddleware';
 
 
 export default function createStore(initialState = {}, history) {
@@ -12,6 +13,7 @@ export default function createStore(initialState = {}, history) {
   const sagaMiddleware = createSagaMiddleware();
   const createStoreWithMiddleware = compose(
     applyMiddleware(
+      redirectMiddleware,
       routerMiddleware(history), // for dispatching history actions
       sagaMiddleware
     )

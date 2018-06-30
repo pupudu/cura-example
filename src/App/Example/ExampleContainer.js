@@ -1,8 +1,8 @@
 import {connect} from 'react-redux';
 import Example from './Example';
 
-let mapStateToProps = ({app}) => ({
-  title: app.message
+let mapStateToProps = ({fetchData}) => ({
+  data: fetchData.exampleKey
 });
 
 let mapDispatchToProps = () => {

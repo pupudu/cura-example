@@ -1,11 +1,20 @@
-import { all } from 'redux-saga/effects';
+import {all} from 'redux-saga/effects';
 
 // Import your Sagas here
-import {createFetchSaga} from './fetch/fetchSaga';
+import {createFetchSaga, registerPreProcessor} from './reactools/fetch/fetchSaga';
+import fetchMetadata from './rootMetadata';
 
 // Create a fetch saga
-let fetchSaga = createFetchSaga({});
+let fetchSaga = createFetchSaga(fetchMetadata);
 
+// Register Pre Processors
+registerPreProcessor("auth", (options) => {
+  options.headers = {
+    ...(options.headers || {}),
+    token: "***********__ JWT TOKEN __****************"
+  };
+  return options;
+});
 
 /**
  * Combine all your sagas here

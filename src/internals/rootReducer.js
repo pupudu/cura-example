@@ -1,11 +1,11 @@
-import {appReducer} from "../App/appReducer";
 import {combineReducers} from "redux";
-import {createFetchStatusReducer} from './fetch/fetchStatusReducer';
+import {createFetchStatusReducer} from './reactools/fetch/fetchStatusReducer';
+import {fetchDataSetterReducer} from './reactools/reducerFactory'
+import fetchMetadata from './rootMetadata';
 
-
-let fetchStatus = createFetchStatusReducer({});
+let fetchStatus = createFetchStatusReducer(fetchMetadata);
 
 export default combineReducers({
-  app: appReducer,
-  fetchStatus
+  fetchStatus,
+  fetchData: fetchDataSetterReducer
 });
