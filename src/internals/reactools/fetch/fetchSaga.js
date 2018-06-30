@@ -17,6 +17,7 @@ function preProcess(entry) {
         options: handler(processedEntry.options) || processedEntry.options
       };
     }
+    return processedEntry;
   }, entry);
 }
 
