@@ -12,7 +12,6 @@
     "connected-react-router": "^4.3.0",
     "express": "^4.16.3",
     "file-loader": "^1.1.11",
-    "glob": "^7.1.2",
     "history": "^4.7.2",
     "ignore-styles": "^5.0.1",
     "react": "^16.4.1",
@@ -27,14 +26,16 @@
     "url-loader": "^1.0.1"
   },
   "scripts": {
-    "start": "yarn build && yarn server",
+    "start": "react-scripts start",
+    "server": "yarn build && yarn express",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "server": "NODE_ENV=production node server/bootstrap.js"
+    "express": "NODE_ENV=production node server/bootstrap.js"
   },
   "devDependencies": {
-    "babel-plugin-preval": "^3.0.0"
+    "babel-plugin-macros": "^2.2.2",
+    "import-all.macro": "^2.0.3"
   },
   "browserslist": {
     "development": [

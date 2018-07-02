@@ -1,4 +1,4 @@
-import combineMetadata from './reactools/combineMetadata';
+import importAll from 'import-all.macro';
+import combine from './reactools/combineMetadata';
 
-export default combineMetadata();
-
+export default combine(importAll.sync('../**/fetchMetadata*'));

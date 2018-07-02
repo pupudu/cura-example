@@ -1961,7 +1961,7 @@ babel-plugin-macros@2.2.1:
   dependencies:
     cosmiconfig "^4.0.0"
 
-babel-plugin-macros@^2.2.2:
+babel-plugin-macros@^2.0.0, babel-plugin-macros@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/babel-plugin-macros/-/babel-plugin-macros-2.2.2.tgz#049c93f4b934453688a6ec38bba529c55bf0fa1f"
   dependencies:
@@ -1970,13 +1970,6 @@ babel-plugin-macros@^2.2.2:
 babel-plugin-named-asset-import@1.0.0-next.3e165448:
   version "1.0.0-next.3e165448"
   resolved "https://registry.yarnpkg.com/babel-plugin-named-asset-import/-/babel-plugin-named-asset-import-1.0.0-next.3e165448.tgz#f5ef4e118eeda727fcb7d4847aae1e1cf1bfe36b"
-
-babel-plugin-preval@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-preval/-/babel-plugin-preval-3.0.0.tgz#16fd31f5ac7869b0648211c21d93b34af7281a4f"
-  dependencies:
-    babel-plugin-macros "^2.2.2"
-    require-from-string "^2.0.2"
 
 babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"
@@ -5067,6 +5060,13 @@ immutable@^3.8.1:
   version "3.8.2"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
 
+import-all.macro@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/import-all.macro/-/import-all.macro-2.0.3.tgz#3e5de28920eb7237badb85acf15eb71c8d5b04f6"
+  dependencies:
+    babel-plugin-macros "^2.0.0"
+    glob "^7.1.2"
+
 import-lazy@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-lazy/-/import-lazy-2.1.0.tgz#05698e3d45c88e8d7e9d92cb0584e77f096f3e43"
@@ -8018,7 +8018,7 @@ require-from-string@^1.1.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-1.2.1.tgz#529c9ccef27380adfec9a2f965b649bbee636418"
 
-require-from-string@^2.0.1, require-from-string@^2.0.2:
+require-from-string@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"
 
