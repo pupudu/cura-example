@@ -1,12 +1,11 @@
 require('ignore-styles');
 require('url-loader');
 require('file-loader');
-require('babel-register')({
+require('@babel/register')({
   ignore: [ /(node_modules)/ ],
-  presets: ['env', 'react-app'],
+  presets: ['@babel/preset-env', 'react-app'],
   plugins: [
-    'macros',
-    'syntax-dynamic-import',
+    '@babel/plugin-syntax-dynamic-import',
     'dynamic-import-node',
     'react-loadable/babel'
   ]

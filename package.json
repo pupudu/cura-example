@@ -4,16 +4,9 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
-    "babel-plugin-dynamic-import-node": "^1.2.0",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react-app": "^3.1.1",
-    "babel-register": "^6.26.0",
     "connected-react-router": "^4.3.0",
     "express": "^4.16.3",
-    "file-loader": "^1.1.11",
     "history": "^4.7.2",
-    "ignore-styles": "^5.0.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-loadable": "^5.4.0",
@@ -21,9 +14,7 @@
     "react-router": "^4.3.1",
     "react-scripts": "2.0.0-next.3e165448",
     "redux": "^4.0.0",
-    "redux-saga": "1.0.0-beta.1",
-    "redux-thunk": "^2.3.0",
-    "url-loader": "^1.0.1"
+    "redux-saga": "1.0.0-beta.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,8 +25,16 @@
     "express": "NODE_ENV=production node server/bootstrap.js"
   },
   "devDependencies": {
-    "babel-plugin-macros": "^2.2.2",
-    "import-all.macro": "^2.0.3"
+    "@babel/core": "^7.0.0-beta.51",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.51",
+    "@babel/preset-env": "^7.0.0-beta.51",
+    "@babel/register": "^7.0.0-beta.51",
+    "babel-plugin-dynamic-import-node": "^2.0.0",
+    "babel-preset-react-app": "^4.0.0-next.3e165448",
+    "file-loader": "^1.1.11",
+    "ignore-styles": "^5.0.1",
+    "import-all.macro": "^2.0.3",
+    "url-loader": "^1.0.1"
   },
   "browserslist": {
     "development": [
