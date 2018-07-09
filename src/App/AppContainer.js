@@ -1,7 +1,6 @@
-import {connect} from "react-redux";
 import App from './App'
-import {makeFetcher} from '../internals/reactools/actionCreatorsFactory';
-import {bindActionCreators} from 'redux';
+import {bindActionCreators} from '../internals/reactools/reduxPatches/bindActionCreators';
+import {connectWithRouter} from '../internals/reactools/reduxPatches/connect';
 
 let exampleKey = "exampleKey";
 
@@ -11,8 +10,7 @@ let mapStateToProps = ({fetchData, fetchStatus}) => ({
 });
 
 let mapDispatchToProps = dispatch => bindActionCreators({
-  updateMessage: makeFetcher(exampleKey),
 }, dispatch);
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connectWithRouter(mapStateToProps, mapDispatchToProps)(App);
