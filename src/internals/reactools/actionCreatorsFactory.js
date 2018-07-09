@@ -5,6 +5,9 @@
 
 import {REDUX_ACTIONS} from './constants';
 
+// No operation function to be used as fallback default
+const noop = () => undefined;
+
 /**
  * The factory for generic action creator
  * This is supposed to be used only internally, but exposed just in case someone needs it
@@ -68,15 +71,21 @@ export const makeGenericLeadingFetcher = (key, ...argNames) => makeGenericFetche
  *
  * @returns {function(*, *): {type: string, key: *, payload: *, callback: *}}
  */
-const makeFetcherTemplate = (type, key, callback) => (payload, callbackInAction) => {
-  // Give precedence to the callback in action
-  callback = callbackInAction || callback;
-
+export const makeFetcherTemplate = (type, key, callback = noop) => (payload, resolve = noop, reject = noop) => {
   return {
     type,
     key,
     payload,
-    callback
+    callback: (err, ...args) => {
+      // Call the callback registered when making the action creator
+      callback(err, ...args);
+
+      // Resolve or reject promise bound by bindActionCreators method of reactools(not redux)
+      if (err) {
+        return reject(err);
+      }
+      return resolve(...args);
+    }
   };
 };
 
