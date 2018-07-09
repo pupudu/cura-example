@@ -5,11 +5,11 @@ import createUniversalRenderer from "./reactools-express/createUniversalRenderer
 import App from "../src/App";
 import createStore from "../src/internals/store";
 
-import setupRedux from "./reactools-express/setupRedux";
-import setupHelmet from "./reactools-express/setupHelmet";
-import setupReactRouter from "./reactools-express/setupReactRouter";
-import setupLoadable from "./reactools-express/setupLoadable";
-import setupStyledComponents from './reactools-express/setupStyledComponents';
+import setupRedux from "./reactools-express/ssrAdapters/setupRedux";
+import setupHelmet from "./reactools-express/ssrAdapters/setupHelmet";
+import setupReactRouter from "./reactools-express/ssrAdapters/setupReactRouter";
+import setupLoadable from "./reactools-express/ssrAdapters/setupLoadable";
+import setupStyledComponents from './reactools-express/ssrAdapters/setupStyledComponents';
 
 
 // get the html file created with the create-react-app build
