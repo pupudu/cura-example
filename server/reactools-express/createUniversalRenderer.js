@@ -22,8 +22,8 @@ export default ({App, index, features = [], adapters = {}}) => (req, res, next) 
 
     for (let i = 0; i < features.length; i++) {
       const feature = features[i];
-      if (adapters[feature].middleware) {
-        let status = adapters[feature].middleware(req, res);
+      if (adapters[feature].adapterDidMount) {
+        let status = adapters[feature].adapterDidMount(req, res);
         if (status === false) {
           return;
         }

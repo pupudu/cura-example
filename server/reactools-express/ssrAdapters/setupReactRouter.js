@@ -15,7 +15,7 @@ class SetupReactRouter {
     </StaticRouter>
   }
 
-  middleware(req, res) {
+  adapterDidMount(req, res) {
     if (this.context.url) {
       res.redirect(this.context.status || 301, this.context.url);
       return false;
