@@ -54,8 +54,7 @@ const getKeyBasedState = (state, action, status) => ({
  */
 const keyBasedReducer = (state, action) => {
   switch (action.type) {
-    case REDUX_ACTIONS.FETCH:
-    case REDUX_ACTIONS.FETCH_LATEST:
+    case REDUX_ACTIONS.FETCH_INIT:
       return getKeyBasedState(state, action, FETCH_STATUSES.IN_PROGRESS);
     case REDUX_ACTIONS.FETCH_SUCCESS:
       return getKeyBasedState(state, action, FETCH_STATUSES.SUCCESS);
@@ -77,8 +76,7 @@ const keyBasedReducer = (state, action) => {
  */
 const fetchKeyBasedReducer = (state, action) => {
   switch (action.type) {
-    case REDUX_ACTIONS.FETCH:
-    case REDUX_ACTIONS.FETCH_LATEST:
+    case REDUX_ACTIONS.FETCH_INIT:
       return getFetchKeyBasedState(state, action, FETCH_STATUSES.IN_PROGRESS);
     case REDUX_ACTIONS.FETCH_SUCCESS:
       return getFetchKeyBasedState(state, action, FETCH_STATUSES.SUCCESS);
