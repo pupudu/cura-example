@@ -73,7 +73,10 @@ export const createFetchMiddleware = metadata => {
 
     // If it is a fetch action, we handle it
     if (action.type === REDUX_ACTIONS.FETCH) {
+      // Note: pass store.dispatch instead of next, so that the middleware order doesn't matter
       getFetchHandler(action, metadata)(store.dispatch);
     }
   };
 };
+
+// TODO: Need to find a way to replicate fetchLatest and fetchLeading behavior without the sagas

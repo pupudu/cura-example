@@ -11,7 +11,8 @@ export const createRedirectMiddleware = (actionType) => {
   return store => next => action => {
     if (action.type === actionType) {
       if (action.url) {
-        next(push(action.url))
+        // Note: call store.dispatch instead of next, so that the middleware order doesn't matter
+        store.dispatch(push(action.url))
       }
     }
     return next(action);
