@@ -18,16 +18,24 @@ function bindActionCreator(actionCreator, dispatch) {
     // Clone the arguments into an array, to modify later
     let args = Array.from(arguments);
 
-    // Return a promise, so the components can do, someMethodCall().then().catch() or async await.
-    return new Promise((resolve, reject) => {
+    console.log(actionCreator.appendPromiseHandlers);
 
-      // We append the resolve and reject calls to the argument list, so a reducer or a middleware can
-      // ...call them, after an async operation, to signal the method caller about the status of the operation
-      args.push(resolve, reject);
+    // First we check if this is an actionCreator made by the reactools factory methods
+    // If so, return a promise, so the components can do, someMethodCall().then().catch() or async await.
+    if (actionCreator.appendPromiseHandlers) {
+      return new Promise((resolve, reject) => {
 
-      // Same step as original redux function
-      return dispatch(actionCreator.apply(this, args));
-    });
+          // We append the resolve and reject calls to the argument list, so a reducer or a middleware can
+          // ...call them, after an async operation, to signal the method caller about the status of the operation
+          args.push(resolve, reject);
+
+        // Same step as original redux function, but wrapped in the promise constructor
+        return dispatch(actionCreator.apply(this, args));
+      });
+    }
+
+    // if the appendPromiseHandlers flag is not there, we return the same result as redux bindActionCreator
+    return dispatch(actionCreator.apply(this, args));
   };
 }
 

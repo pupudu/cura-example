@@ -71,22 +71,29 @@ export const makeGenericLeadingFetcher = (key, ...argNames) => makeGenericFetche
  *
  * @returns {function(*, *): {type: string, key: *, payload: *, callback: *}}
  */
-export const makeFetcherTemplate = (type, key, callback = noop) => (payload, resolve = noop, reject = noop) => {
-  return {
-    type,
-    key,
-    payload,
-    callback: (err, ...args) => {
-      // Call the callback registered when making the action creator
-      callback(err, ...args);
+export const makeFetcherTemplate = (type, key, callback = noop) => {
+  function fetchActionCreator(payload, resolve = noop, reject = noop) {
+    return {
+      type,
+      key,
+      payload,
+      callback: (err, ...args) => {
+        // Call the callback registered when making the action creator
+        callback(err, ...args);
 
-      // Resolve or reject promise bound by bindActionCreators method of reactools(not redux)
-      if (err) {
-        return reject(err);
+        // Resolve or reject promise bound by bindActionCreators method of reactools(not redux)
+        if (err) {
+          return reject(err);
+        }
+        return resolve(...args);
       }
-      return resolve(...args);
-    }
-  };
+    };
+  }
+
+  // Attach a flag as a custom property to signal the bindActionCreators method to push the promise handlers
+  fetchActionCreator.appendPromiseHandlers = true;
+
+  return fetchActionCreator;
 };
 
 // We export the fetchers created from the fetcher template
