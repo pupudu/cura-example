@@ -40,40 +40,40 @@ function* fetchActionHandler(metadata, action) {
 }
 
 /**
- * Saga: Capture all FETCH actions to handle side-effects
+ * Create a fetch saga based on fetch action type and corresponding saga effect
+ *    fetch - handle all such fetch calls
+ *    fetchLatest - terminate all incomplete previous fetches upon a new one
+ *    fetchLeading - ignore all future requests until the current fetch request has finished
+ *
+ * @param {object} metadata - fetch metadata file
+ * @param {string} fetchActionType - accepting fetch action type
+ * @param {function} sagaEffect - effect to call from redux-saga
+ * @return {Function} - saga
  */
-export function createFetchSaga(metadata) {
+function createSaga(metadata, fetchActionType, sagaEffect) {
   if (!metadata) {
     throw new Error("Fetch metadata cannot be empty!");
   }
-  return function* takeEveryFetchSaga() {
-    yield takeEvery(REDUX_ACTIONS.FETCH, fetchActionHandler, metadata);
+  return function* () {
+    yield sagaEffect(fetchActionType, fetchActionHandler, metadata);
   }
 }
+
+/**
+ * Saga: Capture all FETCH actions to handle side-effects
+ */
+export const createFetchSaga = metadata => createSaga(metadata, REDUX_ACTIONS.FETCH, takeEvery);
 
 /**
  * Saga: Capture the last FETCH_LATEST action to handle side-effects
  */
-export function createFetchLatestSaga(metadata) {
-  if (!metadata) {
-    throw new Error("Fetch metadata cannot be empty!");
-  }
-  return function* takeLatestFetchSaga() {
-    yield takeLatest(REDUX_ACTIONS.FETCH_LATEST, fetchActionHandler, metadata);
-  }
-}
-
+export const createFetchLatestSaga = metadata => createSaga(metadata, REDUX_ACTIONS.FETCH_LATEST, takeLatest);
 
 /**
  * Saga: Capture the last FETCH_LEADING action to handle side-effects
  */
-export function createFetchLeadingSaga(metadata) {
-  if (!metadata) {
-    throw new Error("Fetch metadata cannot be empty!");
-  }
-  return function* takeLatestFetchSaga() {
-    yield takeLeading(REDUX_ACTIONS.FETCH_LEADING, fetchActionHandler, metadata);
-  }
-}
+export const createFetchLeadingSaga = metadata => createSaga(metadata, REDUX_ACTIONS.FETCH_LEADING, takeLeading);
 
 export default createFetchSaga;
+
+// TODO - can we create a throttled saga? which will process a bounded number of fetch calls at a time, queue the rest
