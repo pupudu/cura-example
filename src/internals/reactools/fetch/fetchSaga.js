@@ -1,7 +1,7 @@
-import {all, call, put, takeEvery, takeLatest, takeLeading} from 'redux-saga/effects';
+import {put, take, takeEvery, takeLatest, takeLeading} from 'redux-saga/effects';
+import {eventChannel} from 'redux-saga';
 import {REDUX_ACTIONS} from '../constants';
-import {doFetch, getReplyActions} from './fetchHandlers';
-import {preProcess} from './preProcess';
+import {getFetchHandler} from './fetchMiddleware';
 
 
 /**
@@ -12,42 +12,30 @@ import {preProcess} from './preProcess';
  * @param {object} action - redux action
  */
 function* fetchActionHandler(metadata, action) {
+  let handler = getFetchHandler(action, metadata);
 
-  let reply = {};
-  let err = null;
-  let entry = metadata[action.key];
+  // Create an event channel to let the async-await based fetch middleware to take control of the saga effects
+  let fetchEvenChannel = eventChannel(emit => {
+    handler((event) => {
+      // Use a setTimeout to delay operation to next tick
+      // Without this, immediate events emitted from the handler will not be passed into emit
+      setTimeout(() => {
+        emit(event)
+      });
+    });
 
-  // Handle the fetch call
-  try {
-    // Dispatch INIT action to signal the supporting reducers/middleware if any
-    yield put({...action, type: REDUX_ACTIONS.FETCH_INIT});
+    // As the unsubscribe function of the event channel, we just void the functionality of the handler
+    // Currently, the unsubscribe function is not used anywhere
+    // This might be converted to a more meaningful function if there is an actual need to unsubscribe
+    return () => {
+      handler = () => undefined;
+    };
+  });
 
-    reply = yield call(doFetch, preProcess(entry), action.payload);
-
-    // If the code reaches this point, rather than going to the catch, that is an indication that the fetch is a success
-    // Fire action to be used by the fetch statuses reducer
-    yield put({...action, type: REDUX_ACTIONS.FETCH_SUCCESS});
-
-    // Fire reply action(s) from metadata
-    let replyActions = yield call(getReplyActions, reply);
-    yield all(replyActions.map(action => put(action)));
-
-  } catch (error) {
-    // Fire action to be used by the fetch statuses reducer
-    yield put({...action, type: REDUX_ACTIONS.FETCH_FAILED});
-
-    // Fire reply action from metadata. Here we pass the error instead of payload
-    let replyActions = yield call(getReplyActions, error);
-    yield all(replyActions.map(action => put(action)));
-
-    // Save error to conditionally redirect later
-    err = error;
-  }
-
-  // Call post fetch handler callback, if provided
-  // Here we do not bind anything besides the response error data assuming the post action is a closure
-  if (action.callback) {
-    yield call(action.callback, err, reply.data);
+  // Watch for events emitted from the fetchEvent channel and dispatch actual redux actions
+  while (true) {
+    let channelAction = yield take(fetchEvenChannel);
+    yield put(channelAction);
   }
 }
 

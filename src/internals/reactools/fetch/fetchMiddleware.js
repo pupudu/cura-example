@@ -3,7 +3,6 @@ import {doFetch, getReplyActions} from './fetchHandlers';
 import {preProcess} from './preProcess';
 
 
-// TODO - Try to merge this and fetchActionHandler in fetchSaga, so we don't have to deal with inconsistency issues
 /**
  * Create a fetchHandler which fires reply actions based on fetch call status and corresponding metadata.
  * This was created after the fetchSaga module, to produce the same behavior without redux-saga
