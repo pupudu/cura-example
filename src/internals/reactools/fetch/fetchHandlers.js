@@ -2,15 +2,13 @@ import fetch from './api';
 import {HTTP_METHODS, HTTP_CODES} from '../constants';
 
 /**
- * Perform a fetch based on the meta data available corresponding to the request type
- * Currently based on the fetch API. May need to update to support axios or any other alternative.
+ * Process fetchMetadata entry and action payload to derive the url and request options for the fetch call to be made
  *
- * @param {object} entry - fetch metadata object entry
- * @param {object} payload - Query params or post body(Will be switched based on HTTP method)
- * @returns {Promise} - response data from backend
+ * @param {object} entry - fetch metadata entry
+ * @param {object} payload - fetch action payload
+ * @return {object} url and options as an object
  */
-export async function doFetch(entry, payload) {
-
+function deriveUrlAndPayload(entry, payload) {
   let {url, options} = entry;
   // Note - metadata will not be validated here expecting that the metadata file is perfect and predictable
 
@@ -38,15 +36,30 @@ export async function doFetch(entry, payload) {
   } else {
     optionsClone.body = {...payloadClone, ...optionsClone.body};
   }
+  return {
+    url,
+    options: optionsClone
+  }
+}
 
+/**
+ * Perform a fetch based on the meta data available corresponding to the request type
+ * Currently based on the fetch API. May need to update to support axios or any other alternative.
+ *
+ * @param {object} entry - fetch metadata object entry
+ * @param {object} payload - Query params or post body(Will be switched based on HTTP method)
+ * @returns {Promise} - response data from backend
+ */
+export async function doFetch(entry, payload) {
+
+  let {url, options} = deriveUrlAndPayload(entry, payload);
   let err;
 
   try {
-    const res = await fetch(url, optionsClone);
+    const res = await fetch(url, options);
 
     // Handle success case
     if (res.status === HTTP_CODES.SUCCESS) {
-
       // Important that we return here. Otherwise the method will throw at the end
       return {
         replyAction: entry.replies[res.status],
