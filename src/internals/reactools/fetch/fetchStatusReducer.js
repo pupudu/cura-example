@@ -45,46 +45,11 @@ const getKeyBasedState = (state, action, status) => ({
   [action.key]: status
 });
 
-/**
- * Default reducer for handling fetch status. Updates the status against the key in corresponding metadata entry
- *
- * @param {object} state - redux store branch for fetch status
- * @param {object} action - redux action
- * @return {*} - reduced state
- */
-const keyBasedReducer = (state, action) => {
-  switch (action.type) {
-    case REDUX_ACTIONS.FETCH_INIT:
-      return getKeyBasedState(state, action, FETCH_STATUSES.IN_PROGRESS);
-    case REDUX_ACTIONS.FETCH_SUCCESS:
-      return getKeyBasedState(state, action, FETCH_STATUSES.SUCCESS);
-    case REDUX_ACTIONS.FETCH_FAILED:
-      return getKeyBasedState(state, action, FETCH_STATUSES.FAILED);
-    default:
-      return state;
+const getState = (hasFetchKey, ...args) => {
+  if (hasFetchKey) {
+    return getFetchKeyBasedState(...args);
   }
-};
-
-/**
- * fetch key based reducer for cases where the same key in the metadata file is used for fetching data related
- * to different entities. In this case, we need to instruct the reducer which attribute to consider for
- * saving the status against.
- *
- * @param {object} state - redux store branch for fetch status
- * @param {object} action - redux action
- * @return {*} - reduced state
- */
-const fetchKeyBasedReducer = (state, action) => {
-  switch (action.type) {
-    case REDUX_ACTIONS.FETCH_INIT:
-      return getFetchKeyBasedState(state, action, FETCH_STATUSES.IN_PROGRESS);
-    case REDUX_ACTIONS.FETCH_SUCCESS:
-      return getFetchKeyBasedState(state, action, FETCH_STATUSES.SUCCESS);
-    case REDUX_ACTIONS.FETCH_FAILED:
-      return getFetchKeyBasedState(state, action, FETCH_STATUSES.FAILED);
-    default:
-      return state;
-  }
+  return getKeyBasedState(...args);
 };
 
 /**
@@ -101,12 +66,15 @@ export function createFetchStatusReducer(metadata) {
 
     const fetchKey = metadata[action.key].fetchKey;
 
-    // If a fetchKey is defined in the corresponding metadata entry, we invoke the fetchKey based reducer
-    if (fetchKey) {
-      return fetchKeyBasedReducer(state, {...action, fetchKey});
+    switch (action.type) {
+      case REDUX_ACTIONS.FETCH_INIT:
+        return getState(fetchKey, state, action, FETCH_STATUSES.IN_PROGRESS);
+      case REDUX_ACTIONS.FETCH_SUCCESS:
+        return getState(fetchKey, state, action, FETCH_STATUSES.SUCCESS);
+      case REDUX_ACTIONS.FETCH_FAILED:
+        return getState(fetchKey, state, action, FETCH_STATUSES.FAILED);
+      default:
+        return state;
     }
-
-    // Default to key based reducer
-    return keyBasedReducer(state, action);
   };
 }
