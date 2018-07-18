@@ -4,7 +4,7 @@ import { connectRouter, routerMiddleware } from 'connected-react-router'
 
 import rootReducer from './rootReducer';
 import rootSaga from './rootSaga';
-import redirectMiddleware from './reactools/redirectMiddleware';
+import redirectMiddleware from './reactools/routools/redirectMiddleware';
 
 
 export default function createStore(initialState = {}, history) {
