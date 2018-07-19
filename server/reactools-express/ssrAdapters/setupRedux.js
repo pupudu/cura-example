@@ -1,5 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import serialize from 'serialize-javascript';
 
 class SetupRedux {
 
@@ -11,7 +12,7 @@ class SetupRedux {
     const reduxState = this.store.getState();
 
     return [
-      '__INITIAL_STATE__={}', `__INITIAL_STATE__=${JSON.stringify(reduxState)}`
+      '__INITIAL_STATE__={}', `__INITIAL_STATE__=${serialize(reduxState)}`
     ]
   }
 
