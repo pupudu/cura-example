@@ -1,5 +1,6 @@
-import fetch from './api';
-import {HTTP_METHODS, HTTP_CODES} from '../constants';
+import {getApi, setApi} from './api';
+import {HTTP_METHODS, HTTP_CODES, REDUX_ACTIONS} from '../constants';
+import {preProcess} from "./preProcess";
 
 /**
  * Process fetchMetadata entry and action payload to derive the url and request options for the fetch call to be made
@@ -56,7 +57,7 @@ export async function doFetch(entry, payload) {
   let err;
 
   try {
-    const res = await fetch(url, options);
+    const res = await getApi()(url, options);
 
     // Handle success case
     if (res.status === HTTP_CODES.SUCCESS) {
@@ -138,3 +139,64 @@ export function getReplyActions(reply) {
 
   return replyActions;
 }
+
+
+/**
+ * Customize the default fetch behavior based on user options
+ * @param {object} options - user options to update fetch behavior
+ */
+export function setupFetch(options) {
+  // Set custom API for fetch requests
+  if (options.api)
+    setApi(options.api);
+}
+
+
+/**
+ * Create a fetchHandler which fires reply actions based on fetch call status and corresponding metadata.
+ * This was created after the fetchSaga module, to produce the same behavior without redux-saga
+ *
+ * @param {object} action - redux fetch action
+ * @param {object} metadata - fetch metadata
+ * @return {Function} - fetchHandler
+ */
+export const getFetchHandler = (action, metadata) => dispatch => {
+  let reply = {};
+  let err = null;
+  const entry = metadata[action.key];
+
+  // Dispatch INIT action to signal the supporting reducers/middleware if any
+  dispatch({
+    ...action,
+    type: REDUX_ACTIONS.FETCH_INIT
+  });
+
+  (async () => {
+    try {
+      reply = await doFetch(preProcess(entry), action.payload);
+
+      // If the code reaches this point, rather than going to the catch, that is an indication that the fetch is a success
+      // Fire action to be used by the fetch statuses reducer
+      dispatch({...action, type: REDUX_ACTIONS.FETCH_SUCCESS});
+
+      // Fire reply action(s) from metadata
+      getReplyActions(reply).map(action => dispatch(action));
+
+    } catch (error) {
+      // Fire action to be used by the fetch statuses reducer
+      dispatch({...action, type: REDUX_ACTIONS.FETCH_FAILED});
+
+      // Fire reply action from metadata. Here we pass the error instead of payload
+      getReplyActions(error).map(action => dispatch(action));
+
+      // Save error to conditionally redirect later
+      err = error;
+    }
+
+    // Call post fetch handler callback, if provided
+    // Here we do not bind anything besides the response error data assuming the post action is a closure
+    if (action.callback) {
+      action.callback(err, reply.data);
+    }
+  })();
+};
