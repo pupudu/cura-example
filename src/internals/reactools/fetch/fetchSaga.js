@@ -12,9 +12,10 @@ import {getFetchHandler, setupFetch} from "./fetchHandlers";
  * @param {object} action - redux action
  */
 function* fetchActionHandler(metadata, action) {
+  // Note that the argument order is swapped here
   let handler = getFetchHandler(action, metadata);
 
-  // Create an event channel to let the async-await based fetch middleware to take control of the saga effects
+  // Create an event channel to let the async-await based fetch handler to take control of the saga effects
   let fetchEvenChannel = eventChannel(emit => {
     handler((event) => {
       // Use a setTimeout to delay operation to next tick
