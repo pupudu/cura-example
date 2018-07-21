@@ -153,7 +153,7 @@ export async function doFetch(entry, payload) {
  * Customize the default fetch behavior based on user options
  * @param {object} options - user options to update fetch behavior
  */
-export function setupFetch(options) {
+export function setupFetch(options = {}) {
   // Set custom API for fetch requests
   if (options.api)
     setApi(options.api);
