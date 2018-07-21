@@ -1,6 +1,7 @@
 import {getApi, setApi} from './api';
 import {HTTP_METHODS, HTTP_CODES, REDUX_ACTIONS} from '../constants';
 import {preProcess} from "./preProcess";
+import {getCachedData, updateCache, disableCache} from './cache';
 
 /**
  * Process fetchMetadata entry and action payload to derive the url and request options for the fetch call to be made
@@ -113,10 +114,15 @@ export async function doFetch(entry, payload) {
   let err;
 
   try {
-    const res = await getApi()(url, options);
+    // First try to get the data from the cache, make fetch call only if not cached!
+    const res = getCachedData(url, options) || await getApi()(url, options);
 
     // Handle success case
+    // Note: Not following fail-fast pattern to handle http failures and fetch failures together
     if (res.status === HTTP_CODES.SUCCESS) {
+      // Update cache only if request is success or is already cached
+      updateCache(url, options, res, entry);
+
       // Important that we return here. Otherwise the method will throw at the end
       return {
         replyAction: entry.replies[res.status],
@@ -151,6 +157,9 @@ export function setupFetch(options) {
   // Set custom API for fetch requests
   if (options.api)
     setApi(options.api);
+
+  if (options.cache === false)
+    disableCache();
 }
 
 

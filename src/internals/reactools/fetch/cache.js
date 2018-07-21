@@ -1,6 +1,6 @@
 // Cache store for all fetch calls
 // Note: Cannot use a Map here, since the url, options pair will not refer to the same object every time
-let cache = {};
+const cache = {};
 
 // Flag to disable caching for all requests
 let rootCacheFlag = true;
