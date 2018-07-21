@@ -6,8 +6,8 @@ router.get('/exampleEndpoint', (req, res) => {
   console.log(req.headers.token);
   setTimeout(() => {
     res.json({
-      message: "Hello Universal App"
-    })
+      message: 'Hello Universal App'
+    });
   }, 5000);
 });
 

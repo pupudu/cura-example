@@ -3,26 +3,19 @@
  * JSDocs against each method of this class will explain the intended use of the methods.
  */
 
-import React from 'react';
-
 class Adapter {
-
   /**
    * Any initial values that would be shared across the other methods will be declared here.
    * It is recommended to define them here (and bind them to `this` keyword) only if they are shared across the other methods
    */
-  constructor() {
-
-  }
+  constructor() {} // eslint-disable-line
 
   /**
    * Sometimes, the adapters need to be initialized by the users (with adapter specific custom data).
    * For instance, for the redux adapter, the user needs to create the user by themselves and inject it here.
    * This is the place to do such declarations
    */
-  init() {
-
-  }
+  init() {}
 
   /**
    * When the adapter is supposed to render something to the root html, this is the place to do that.
@@ -37,8 +30,9 @@ class Adapter {
   replacer() {
     return [
       // TEXT_IN_HTML in the root html will be replaced by TEXT_TO_SUBSTITUTE during the server rendering process
-      'TEXT_IN_HTML', `TEXT_TO_SUBSTITUTE`
-    ]
+      'TEXT_IN_HTML',
+      `TEXT_TO_SUBSTITUTE`
+    ];
   }
 
   /**
@@ -73,9 +67,7 @@ class Adapter {
    * @param {function} next - expressJs call to next middleware
    * @returns {boolean} - whether or not the server rendering process should continue
    */
-  adapterDidMount(req, res, next) {
-
-  }
+  adapterDidMount(req, res, next) {}
 }
 
 export default new Adapter();

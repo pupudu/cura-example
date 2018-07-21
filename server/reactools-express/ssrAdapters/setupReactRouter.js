@@ -1,18 +1,19 @@
 import React from 'react';
-import {StaticRouter} from 'react-router';
+import { StaticRouter } from 'react-router';
 
 class SetupReactRouter {
-
   replacer() {
-    return []
+    return [];
   }
 
   render(children, req) {
     this.context = {};
 
-    return <StaticRouter location={req.url} context={this.context}>
-      {children}
-    </StaticRouter>
+    return (
+      <StaticRouter location={req.url} context={this.context}>
+        {children}
+      </StaticRouter>
+    );
   }
 
   adapterDidMount(req, res) {

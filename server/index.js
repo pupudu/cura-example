@@ -2,8 +2,8 @@ import express from 'express';
 import Loadable from 'react-loadable';
 import path from 'path';
 
-import routes from "./router";
-import serverRenderer from "./universalMiddleware";
+import routes from './router';
+import serverRenderer from './universalMiddleware';
 
 const PORT = 3000;
 
@@ -22,25 +22,22 @@ app.use(routes);
 app.use('^/$', actionIndex, serverRenderer);
 
 // other static resources should just be served as they are
-app.use(express.static(
-  path.resolve(__dirname, '..', 'build'),
-  {
+app.use(
+  express.static(path.resolve(__dirname, '..', 'build'), {
     maxAge: '30d'
-  },
-));
+  })
+);
 
 // Now we serve our app for all cases where a static resource or an API route is not found
 app.use('^/', actionIndex, serverRenderer);
 
-
 // start the app
-Loadable.preloadAll()
-  .then(() => {
-    app.listen(PORT, (error) => {
-      if (error) {
-        return console.log('something bad happened', error);
-      }
+Loadable.preloadAll().then(() => {
+  app.listen(PORT, error => {
+    if (error) {
+      return console.log('something bad happened', error);
+    }
 
-      console.log("listening on " + PORT + "...");
-    });
+    console.log('listening on ' + PORT + '...');
   });
+});

@@ -28,7 +28,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint --fix src",
+    "lint": "eslint --fix src server",
     "express": "NODE_ENV=production node server/bootstrap.js"
   },
   "devDependencies": {

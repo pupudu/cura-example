@@ -1,8 +1,6 @@
-import React from 'react';
 import Helmet from 'react-helmet';
 
 class SetupHelmet {
-
   replacer() {
     const helmet = Helmet.renderStatic();
 
@@ -13,13 +11,12 @@ class SetupHelmet {
         ${helmet.meta.toString()}
         ${helmet.link.toString()}
       `
-    ]
+    ];
   }
 
   render(children) {
     return children;
   }
-
 }
 
 export default new SetupHelmet();
