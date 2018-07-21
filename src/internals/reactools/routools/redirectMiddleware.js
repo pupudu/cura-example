@@ -5,7 +5,7 @@
  * The REDIRECT action can be customized using the factory method as required
  */
 
-import {push} from 'connected-react-router';
+import { push } from 'connected-react-router';
 
 /**
  * Derive the redirect url based on the redirect action type
@@ -16,8 +16,8 @@ import {push} from 'connected-react-router';
  * @param redirectAppendAction - action type for append to path
  * @return {string} - redirect url
  */
-function getRedirectUrl(state, action, {redirectAction, redirectAppendAction}) {
-  switch(action.type) {
+function getRedirectUrl(state, action, { redirectAction, redirectAppendAction }) {
+  switch (action.type) {
     case redirectAction:
       return action.url;
     case redirectAppendAction: {
@@ -27,7 +27,7 @@ function getRedirectUrl(state, action, {redirectAction, redirectAppendAction}) {
       return `${currentBase}/${action.url}`;
     }
     default:
-      return "";
+      return '';
   }
 }
 
@@ -55,8 +55,8 @@ export const createRedirectMiddleware = (redirectAction, redirectAppendAction) =
     // Call next middleware even if the interested actions are caught,
     // So that this middleware doesn't interrupt the users application in any way
     return next(action);
-  }
+  };
 };
 
 // Expose a default redirect middleware for majority of users
-export default createRedirectMiddleware("REDIRECT", "REDIRECT_APPEND");
+export default createRedirectMiddleware('REDIRECT', 'REDIRECT_APPEND');

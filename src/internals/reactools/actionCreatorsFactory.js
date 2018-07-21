@@ -3,7 +3,7 @@
  * Created by pubudud on 3/30/17.
  */
 
-import {REDUX_ACTIONS} from './constants';
+import { REDUX_ACTIONS } from './constants';
 
 // No operation function to be used as fallback default
 const noop = () => undefined;
@@ -17,7 +17,7 @@ const noop = () => undefined;
  * @returns {function} - Redux action creator
  */
 export const makeActionCreator = (type, ...argNames) => (...args) => {
-  const action = {type};
+  const action = { type };
   argNames.forEach((arg, index) => {
     action[argNames[index]] = args[index];
   });
@@ -31,7 +31,8 @@ export const makeActionCreator = (type, ...argNames) => (...args) => {
  * @param {*} argNames - action payload(s) names
  * @return {function} - Redux action creator
  */
-const makeGenericFetcherTemplate = (type, key, ...argNames) => makeActionCreator(type, "key", ...argNames);
+const makeGenericFetcherTemplate = (type, key, ...argNames) =>
+  makeActionCreator(type, 'key', ...argNames);
 
 /**
  * Action Creator factory for FETCH actions which accepts a compulsory 'key' attribute
@@ -40,7 +41,8 @@ const makeGenericFetcherTemplate = (type, key, ...argNames) => makeActionCreator
  * @param {*} argNames - action payload(s) names
  * @returns {function} - Redux action creator
  */
-export const makeGenericFetcher = (key, ...argNames) => makeGenericFetcherTemplate(REDUX_ACTIONS.FETCH, key, ...argNames);
+export const makeGenericFetcher = (key, ...argNames) =>
+  makeGenericFetcherTemplate(REDUX_ACTIONS.FETCH, key, ...argNames);
 
 /**
  * Similar to the makeGenericFetcher factory. But will cancel previous fetch when a similar request is made
@@ -49,7 +51,8 @@ export const makeGenericFetcher = (key, ...argNames) => makeGenericFetcherTempla
  * @param {*} argNames - action payload(s) names
  * @returns {function} - Redux action creator
  */
-export const makeGenericLatestFetcher = (key, ...argNames) => makeGenericFetcherTemplate(REDUX_ACTIONS.FETCH_LATEST, key, ...argNames);
+export const makeGenericLatestFetcher = (key, ...argNames) =>
+  makeGenericFetcherTemplate(REDUX_ACTIONS.FETCH_LATEST, key, ...argNames);
 
 /**
  * Similar to the makeGenericFetcher factory. But will cancel FUTURE requests until the current task is finished
@@ -58,7 +61,8 @@ export const makeGenericLatestFetcher = (key, ...argNames) => makeGenericFetcher
  * @param {*} argNames - action payload(s) names
  * @returns {function} - Redux action creator
  */
-export const makeGenericLeadingFetcher = (key, ...argNames) => makeGenericFetcherTemplate(REDUX_ACTIONS.FETCH_LEADING, key, ...argNames);
+export const makeGenericLeadingFetcher = (key, ...argNames) =>
+  makeGenericFetcherTemplate(REDUX_ACTIONS.FETCH_LEADING, key, ...argNames);
 
 /**
  * Make an opinionated actionCreator with embedded type, key, payload and postAction.
@@ -105,7 +109,8 @@ export const makeFetcherTemplate = (type, key, callback = noop) => {
  * @param {function} [callback] - error first function to execute after the fetch call. This function will receive any error and fetch response data arguments
  * @return {function(*, *)} - opinionated action creator
  */
-export const makeFetcher = (key, callback) => makeFetcherTemplate(REDUX_ACTIONS.FETCH, key, callback);
+export const makeFetcher = (key, callback) =>
+  makeFetcherTemplate(REDUX_ACTIONS.FETCH, key, callback);
 
 /**
  * Similar to makeFetcher, cancel previous unfulfilled fetch calls
@@ -114,7 +119,8 @@ export const makeFetcher = (key, callback) => makeFetcherTemplate(REDUX_ACTIONS.
  * @param {function} [callback] - error first function to execute after the fetch call. This function will receive any error and fetch response data arguments
  * @return {function(*, *)} - opinionated action creator
  */
-export const makeLatestFetcher = (key, callback) => makeFetcherTemplate(REDUX_ACTIONS.FETCH_LATEST, key, callback);
+export const makeLatestFetcher = (key, callback) =>
+  makeFetcherTemplate(REDUX_ACTIONS.FETCH_LATEST, key, callback);
 
 /**
  * Similar to makeFetcher, cancel future actions until current fetch has completed
@@ -123,4 +129,5 @@ export const makeLatestFetcher = (key, callback) => makeFetcherTemplate(REDUX_AC
  * @param {function} [callback] - error first function to execute after the fetch call. This function will receive any error and fetch response data arguments
  * @return {function(*, *)} - opinionated action creator
  */
-export const makeLeadingFetcher = (key, callback) => makeFetcherTemplate(REDUX_ACTIONS.FETCH_LEADING, key, callback);
+export const makeLeadingFetcher = (key, callback) =>
+  makeFetcherTemplate(REDUX_ACTIONS.FETCH_LEADING, key, callback);

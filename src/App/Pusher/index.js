@@ -1,1 +1,1 @@
-export {default} from './PusherContainer';
+export { default } from './PusherContainer';

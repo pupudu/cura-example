@@ -11,7 +11,7 @@
  * Created by pubudud.
  */
 
-import {REDUX_ACTIONS, FETCH_STATUSES} from '../constants';
+import { REDUX_ACTIONS, FETCH_STATUSES } from '../constants';
 
 const getSingleFetchKeyBasedState = (state, action, status) => ({
   ...state,
@@ -22,8 +22,8 @@ const getSingleFetchKeyBasedState = (state, action, status) => ({
 });
 
 const getMultipleFetchKeysBasedState = (state, action, status) => {
-  let reducedKey = {...action.payload};
-  action.fetchKey.forEach((subKey) => {
+  let reducedKey = { ...action.payload };
+  action.fetchKey.forEach(subKey => {
     reducedKey = reducedKey[subKey];
   });
   return {
@@ -36,9 +36,9 @@ const getMultipleFetchKeysBasedState = (state, action, status) => {
 };
 
 const getFetchKeyBasedState = (state, action, status) =>
-  Array.isArray(action.fetchKey) ? getMultipleFetchKeysBasedState(state, action, status)
+  Array.isArray(action.fetchKey)
+    ? getMultipleFetchKeysBasedState(state, action, status)
     : getSingleFetchKeyBasedState(state, action, status);
-
 
 const getKeyBasedState = (state, action, status) => ({
   ...state,
@@ -61,8 +61,7 @@ const getState = (hasFetchKey, ...args) => {
  */
 export function createFetchStatusReducer(metadata) {
   return (state = {}, action) => {
-    if (!action.key || !metadata[action.key])
-      return state;
+    if (!action.key || !metadata[action.key]) return state;
 
     const fetchKey = metadata[action.key].fetchKey;
 

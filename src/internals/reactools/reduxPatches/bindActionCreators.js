@@ -1,4 +1,4 @@
-import {makeFetcher} from '../actionCreatorsFactory';
+import { makeFetcher } from '../actionCreatorsFactory';
 
 /**
  * This module exports the same bindActionCreators function in redux, with a slight modification
@@ -14,7 +14,7 @@ import {makeFetcher} from '../actionCreatorsFactory';
  * @return {function(): Promise<any>}
  */
 function bindActionCreator(actionCreator, dispatch) {
-  return function () {
+  return function() {
     // Clone the arguments into an array, to modify later
     let args = Array.from(arguments);
 
@@ -22,10 +22,9 @@ function bindActionCreator(actionCreator, dispatch) {
     // If so, return a promise, so the components can do, someMethodCall().then().catch() or async await.
     if (actionCreator.appendPromiseHandlers) {
       return new Promise((resolve, reject) => {
-
-          // We append the resolve and reject calls to the argument list, so a reducer or a middleware can
-          // -call them, after an async operation, to signal the method caller about the status of the operation
-          args.push(resolve, reject);
+        // We append the resolve and reject calls to the argument list, so a reducer or a middleware can
+        // -call them, after an async operation, to signal the method caller about the status of the operation
+        args.push(resolve, reject);
 
         // Same step as original redux function, but wrapped in the promise constructor
         return dispatch(actionCreator.apply(this, args));
@@ -67,8 +66,8 @@ export function bindActionCreators(actionCreators, dispatch) {
     throw new Error(
       `bindActionCreators expected an object or a function, instead received ${
         actionCreators === null ? 'null' : typeof actionCreators
-        }. ` +
-      `Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?`
+      }. ` +
+        `Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?`
     );
   }
 
@@ -78,10 +77,10 @@ export function bindActionCreators(actionCreators, dispatch) {
     const key = keys[i];
     const actionCreator = actionCreators[key];
     if (typeof actionCreator === 'function') {
-      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch)
+      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch);
     }
   }
-  return boundActionCreators
+  return boundActionCreators;
 }
 
 export function bindFetchActionCreators(actionKeys, dispatch) {
@@ -94,13 +93,12 @@ export function bindFetchActionCreators(actionKeys, dispatch) {
   }
 
   return bindActionCreators(
-    Object.keys(actionKeys)
-      .reduce((actionCreators, key) => {
-        return {
-          ...actionCreators,
-          [key]: makeFetcher(actionKeys[key])
-        }
-      }, {}),
+    Object.keys(actionKeys).reduce((actionCreators, key) => {
+      return {
+        ...actionCreators,
+        [key]: makeFetcher(actionKeys[key])
+      };
+    }, {}),
     dispatch
   );
 }

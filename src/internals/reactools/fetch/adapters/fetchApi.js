@@ -14,8 +14,7 @@ export default (url, options) =>
 
       // Build searchParams object using query key-value pairs
       for (let i = 0; i < keys.length; i++) {
-        if (options.params[keys[i]])
-          searchParams.append(keys[i], options.params[keys[i]]);
+        if (options.params[keys[i]]) searchParams.append(keys[i], options.params[keys[i]]);
       }
 
       // Extract query string
@@ -23,28 +22,33 @@ export default (url, options) =>
     }
 
     // Send and Receive cookies to handle user session
-    options.credentials = "include";
+    options.credentials = 'include';
 
     // Assume only json requests will be sent by default
     // TODO: Should we just merge these two instead of conditionally assigning
-    options.headers = new Headers(options.headers || {
-      "Content-Type": "application/json"
-    });
+    options.headers = new Headers(
+      options.headers || {
+        'Content-Type': 'application/json'
+      }
+    );
 
-    if (typeof options.body === "object") {
+    if (typeof options.body === 'object') {
       options.body = JSON.stringify(options.body);
     }
 
     fetch(url, options)
-      .then((res) => {
+      .then(res => {
         // Assume that only json responses will be received
-        res.json()
-          .then((data) => resolve({
-            ...res,
-            data,
-            status: res.status
-          }))
-          .catch((err) => {
+        res
+          .json()
+          .then(data =>
+            resolve({
+              ...res,
+              data,
+              status: res.status
+            })
+          )
+          .catch(err => {
             // Custom error message for simplified debugging
             err = new Error(`Error while parsing fetched data from server: ${err}`);
             return reject(err);

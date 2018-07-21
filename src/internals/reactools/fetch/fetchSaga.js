@@ -1,8 +1,7 @@
-import {put, take, takeEvery, takeLatest, takeLeading} from 'redux-saga/effects';
-import {eventChannel} from 'redux-saga';
-import {REDUX_ACTIONS} from '../constants';
-import {getFetchHandler, setupFetch} from "./fetchHandlers";
-
+import { put, take, takeEvery, takeLatest, takeLeading } from 'redux-saga/effects';
+import { eventChannel } from 'redux-saga';
+import { REDUX_ACTIONS } from '../constants';
+import { getFetchHandler, setupFetch } from './fetchHandlers';
 
 /**
  * Saga Side-Effects Handler
@@ -17,11 +16,11 @@ function* fetchActionHandler(metadata, action) {
 
   // Create an event channel to let the async-await based fetch handler to take control of the saga effects
   let fetchEvenChannel = eventChannel(emit => {
-    handler((event) => {
+    handler(event => {
       // Use a setTimeout to delay operation to next tick
       // Without this, immediate events emitted from the handler will not be passed into emit
       setTimeout(() => {
-        emit(event)
+        emit(event);
       });
     });
 
@@ -54,31 +53,34 @@ function* fetchActionHandler(metadata, action) {
  */
 function createSaga(metadata, options, fetchActionType, sagaEffect) {
   if (!metadata) {
-    throw new Error("Fetch metadata cannot be empty!");
+    throw new Error('Fetch metadata cannot be empty!');
   }
 
   // setup custom fetch behavior as required
   setupFetch(options);
 
-  return function* () {
+  return function*() {
     yield sagaEffect(fetchActionType, fetchActionHandler, metadata);
-  }
+  };
 }
 
 /**
  * Saga: Capture all FETCH actions to handle side-effects
  */
-export const createFetchSaga = (metadata, options) => createSaga(metadata, options, REDUX_ACTIONS.FETCH, takeEvery);
+export const createFetchSaga = (metadata, options) =>
+  createSaga(metadata, options, REDUX_ACTIONS.FETCH, takeEvery);
 
 /**
  * Saga: Capture the last FETCH_LATEST action to handle side-effects
  */
-export const createFetchLatestSaga = (metadata, options) => createSaga(metadata, options, REDUX_ACTIONS.FETCH_LATEST, takeLatest);
+export const createFetchLatestSaga = (metadata, options) =>
+  createSaga(metadata, options, REDUX_ACTIONS.FETCH_LATEST, takeLatest);
 
 /**
  * Saga: Capture the last FETCH_LEADING action to handle side-effects
  */
-export const createFetchLeadingSaga = (metadata, options) => createSaga(metadata, options, REDUX_ACTIONS.FETCH_LEADING, takeLeading);
+export const createFetchLeadingSaga = (metadata, options) =>
+  createSaga(metadata, options, REDUX_ACTIONS.FETCH_LEADING, takeLeading);
 
 export default createFetchSaga;
 

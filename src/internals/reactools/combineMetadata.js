@@ -3,8 +3,11 @@
  * @param {object} metadataMap - metadata map with fileNames as keys and actual metadata as values
  * @return {object} - combined metadata
  */
-export default (metadataMap) =>
-  Object.keys(metadataMap).reduce((metadata, key) => ({
-    ...metadata,
-    ...metadataMap[key].default
-  }), {})
+export default metadataMap =>
+  Object.keys(metadataMap).reduce(
+    (metadata, key) => ({
+      ...metadata,
+      ...metadataMap[key].default
+    }),
+    {}
+  );

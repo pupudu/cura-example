@@ -35,7 +35,7 @@ class Mapper {
     }
     // If not a function or string, user must have sent an invalid argument
     if (typeof api !== 'string') {
-      throw new Error("Invalid API or API adapter supplied");
+      throw new Error('Invalid API or API adapter supplied');
     }
     // if string, we map the adapter from the map
     if (apiMap[api]) {

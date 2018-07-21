@@ -1,12 +1,13 @@
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Example from './Example';
 
-let mapStateToProps = ({fetchData}) => ({
+let mapStateToProps = ({ fetchData }) => ({
   data: fetchData.exampleKey
 });
 
-let mapDispatchToProps = () => {
+let mapDispatchToProps = () => {};
 
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Example)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Example);

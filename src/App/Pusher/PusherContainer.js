@@ -1,16 +1,21 @@
-import {connect} from "react-redux";
-import Pusher from './Pusher'
-import {bindActionCreators} from '../../internals/reactools/reduxPatches/bindActionCreators';
-import {makeFetcher} from '../../internals/reactools/actionCreatorsFactory';
+import { connect } from 'react-redux';
+import Pusher from './Pusher';
+import { bindActionCreators } from '../../internals/reactools/reduxPatches/bindActionCreators';
+import { makeFetcher } from '../../internals/reactools/actionCreatorsFactory';
 
-let exampleKey = "exampleKey";
+let exampleKey = 'exampleKey';
 
-let mapStateToProps = () => ({
-});
+let mapStateToProps = () => ({});
 
-let mapDispatchToProps = dispatch => bindActionCreators({
-  updateMessage: makeFetcher(exampleKey)
-}, dispatch);
+let mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      updateMessage: makeFetcher(exampleKey)
+    },
+    dispatch
+  );
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(Pusher);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Pusher);

@@ -1,7 +1,7 @@
-import {getApi, setApi} from './api';
-import {HTTP_METHODS, HTTP_CODES, REDUX_ACTIONS} from '../constants';
-import {preProcess} from "./preProcess";
-import {getCachedData, updateCache, disableCache} from './cache';
+import { getApi, setApi } from './api';
+import { HTTP_METHODS, HTTP_CODES, REDUX_ACTIONS } from '../constants';
+import { preProcess } from './preProcess';
+import { getCachedData, updateCache, disableCache } from './cache';
 
 /**
  * Process fetchMetadata entry and action payload to derive the url and request options for the fetch call to be made
@@ -11,12 +11,12 @@ import {getCachedData, updateCache, disableCache} from './cache';
  * @return {object} url and options as an object
  */
 function deriveUrlAndPayload(entry, payload) {
-  let {url, options} = entry;
+  let { url, options } = entry;
   // Note - metadata will not be validated here expecting that the metadata file is perfect and predictable
 
   // Cloned to avoid later assigned values being persistent across requests
-  const optionsClone = {...options},
-    payloadClone = {...payload},
+  const optionsClone = { ...options },
+    payloadClone = { ...payload },
     pathTokens = url.split('/:');
 
   // Cater for path parameters
@@ -25,7 +25,7 @@ function deriveUrlAndPayload(entry, payload) {
     pathTokens.shift();
   }
 
-  pathTokens.forEach((token) => {
+  pathTokens.forEach(token => {
     const paramKey = token.split('/')[0];
     url = url.replace(`/:${paramKey}`, `/${payloadClone[paramKey]}`);
 
@@ -34,16 +34,15 @@ function deriveUrlAndPayload(entry, payload) {
   });
 
   if (optionsClone.method === HTTP_METHODS.GET) {
-    optionsClone.params = {...payloadClone, ...optionsClone.params};
+    optionsClone.params = { ...payloadClone, ...optionsClone.params };
   } else {
-    optionsClone.body = {...payloadClone, ...optionsClone.body};
+    optionsClone.body = { ...payloadClone, ...optionsClone.body };
   }
   return {
     url,
     options: optionsClone
-  }
+  };
 }
-
 
 /**
  * Create a generic action from provided metadata corresponding to the dispatched fetch action
@@ -63,7 +62,6 @@ function createReplyAction(type, payload, error, args = {}) {
   };
 }
 
-
 /**
  * Analyze the reply action and create actions from metadata accordingly
  *
@@ -71,7 +69,6 @@ function createReplyAction(type, payload, error, args = {}) {
  * @return {Array} redux actions array
  */
 export function getReplyActions(reply) {
-
   let replyActions = [];
 
   if (!reply.replyAction) {
@@ -82,23 +79,23 @@ export function getReplyActions(reply) {
   let replies = Array.isArray(reply.replyAction) ? reply.replyAction : [reply.replyAction];
 
   replies.forEach(replyAction => {
-
     // If the reply action is a string, we will follow default behavior
-    if (typeof replyAction === "string") {
+    if (typeof replyAction === 'string') {
       replyActions.push(createReplyAction(replyAction, reply.data, reply.error));
     }
 
     // If the reply action is an object, and it has a field: "type" we merge it with the dispatched action
-    if (typeof replyAction === "object" && replyAction.type) {
-      let metadataAction = {...replyAction};
+    if (typeof replyAction === 'object' && replyAction.type) {
+      let metadataAction = { ...replyAction };
       delete metadataAction.type;
-      replyActions.push(createReplyAction(replyAction.type, reply.data, reply.error, metadataAction));
+      replyActions.push(
+        createReplyAction(replyAction.type, reply.data, reply.error, metadataAction)
+      );
     }
   });
 
   return replyActions;
 }
-
 
 /**
  * Perform a fetch based on the meta data available corresponding to the request type
@@ -109,13 +106,12 @@ export function getReplyActions(reply) {
  * @returns {Promise} - response data from backend
  */
 export async function doFetch(entry, payload) {
-
-  let {url, options} = deriveUrlAndPayload(entry, payload);
+  let { url, options } = deriveUrlAndPayload(entry, payload);
   let err;
 
   try {
     // First try to get the data from the cache, make fetch call only if not cached!
-    const res = getCachedData(url, options) || await getApi()(url, options);
+    const res = getCachedData(url, options) || (await getApi()(url, options));
 
     // Handle success case
     // Note: Not following fail-fast pattern to handle http failures and fetch failures together
@@ -131,13 +127,12 @@ export async function doFetch(entry, payload) {
     }
 
     // Since the fetch status is not success, we will assign a new error to err, which will be thrown later.
-    err = new Error("Fetch failed");
+    err = new Error('Fetch failed');
     err.data = res.data;
 
     // Check if a dedicated failure action is available, else assign the default error response
     err.replyAction = entry.replies[res.status] || entry.replies.failure;
-
-  } catch(e) {
+  } catch (e) {
     // Assign fetch error to err to be thrown at the end
     err = {
       ...e,
@@ -148,20 +143,16 @@ export async function doFetch(entry, payload) {
   throw err;
 }
 
-
 /**
  * Customize the default fetch behavior based on user options
  * @param {object} options - user options to update fetch behavior
  */
 export function setupFetch(options = {}) {
   // Set custom API for fetch requests
-  if (options.api)
-    setApi(options.api);
+  if (options.api) setApi(options.api);
 
-  if (options.cache === false)
-    disableCache();
+  if (options.cache === false) disableCache();
 }
-
 
 /**
  * Create a fetchHandler which fires reply actions based on fetch call status and corresponding metadata.
@@ -188,14 +179,13 @@ export const getFetchHandler = (action, metadata) => dispatch => {
 
       // If the code reaches this point, rather than going to the catch, that is an indication that the fetch is a success
       // Fire action to be used by the fetch statuses reducer
-      dispatch({...action, type: REDUX_ACTIONS.FETCH_SUCCESS});
+      dispatch({ ...action, type: REDUX_ACTIONS.FETCH_SUCCESS });
 
       // Fire reply action(s) from metadata
       getReplyActions(reply).map(action => dispatch(action));
-
     } catch (error) {
       // Fire action to be used by the fetch statuses reducer
-      dispatch({...action, type: REDUX_ACTIONS.FETCH_FAILED});
+      dispatch({ ...action, type: REDUX_ACTIONS.FETCH_FAILED });
 
       // Fire reply action from metadata. Here we pass the error instead of payload
       getReplyActions(error).map(action => dispatch(action));

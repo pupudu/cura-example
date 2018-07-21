@@ -1,14 +1,12 @@
-import {createStore as createReduxStore, compose, applyMiddleware} from 'redux';
+import { createStore as createReduxStore, compose, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import { connectRouter, routerMiddleware } from 'connected-react-router'
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 
 import rootReducer from './rootReducer';
 import rootSaga from './rootSaga';
 import redirectMiddleware from './reactools/routools/redirectMiddleware';
 
-
 export default function createStore(initialState = {}, history) {
-
   // Make a createStore factory which can create the store on demand with the middleware
   const sagaMiddleware = createSagaMiddleware();
   const createStoreWithMiddleware = compose(
@@ -28,4 +26,4 @@ export default function createStore(initialState = {}, history) {
   sagaMiddleware.run(rootSaga);
 
   return store;
-};
+}

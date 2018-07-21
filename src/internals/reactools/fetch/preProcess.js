@@ -8,12 +8,14 @@ export function preProcess(entry) {
   if (!entry.preProcessors) {
     return entry;
   }
-  const entryProcessors = Array.isArray(entry.preProcessors) ? entry.preProcessors : [entry.preProcessors];
+  const entryProcessors = Array.isArray(entry.preProcessors)
+    ? entry.preProcessors
+    : [entry.preProcessors];
   return entryProcessors.reduce((processedEntry, key) => {
     return {
       ...processedEntry,
       options: preProcessors[key](processedEntry.options) || processedEntry.options
-    }
+    };
   }, entry);
 }
 

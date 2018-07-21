@@ -5,7 +5,10 @@
  * @param {string} attribute - Attribute to be selected from action
  * @returns {function} - replacer reducer
  */
-export const createSetterReducer = (actionType, initialState, attribute = "payload") => (state = initialState, action) => {
+export const createSetterReducer = (actionType, initialState, attribute = 'payload') => (
+  state = initialState,
+  action
+) => {
   switch (action.type) {
     case actionType:
       return action[attribute];
@@ -21,10 +24,13 @@ export const createSetterReducer = (actionType, initialState, attribute = "paylo
  * @param {string} attribute - Attribute to be selected from action
  * @returns {function} - merger reducer
  */
-export const createObjMergerReducer = (actionType, initialState, attribute = "payload") => (state = initialState, action) => {
+export const createObjMergerReducer = (actionType, initialState, attribute = 'payload') => (
+  state = initialState,
+  action
+) => {
   switch (action.type) {
     case actionType:
-      return {...state, ...action[attribute]};
+      return { ...state, ...action[attribute] };
     default:
       return state;
   }
@@ -37,10 +43,13 @@ export const createObjMergerReducer = (actionType, initialState, attribute = "pa
  * @param {string} attribute - Attribute to be selected from action
  * @returns {function} - merger reducer
  */
-export const createArrayMergerReducer = (actionType, initialState, attribute = "payload") => (state = initialState, action) => {
+export const createArrayMergerReducer = (actionType, initialState, attribute = 'payload') => (
+  state = initialState,
+  action
+) => {
   switch (action.type) {
     case actionType:
-      return [...state, ...action[attribute] || []];
+      return [...state, ...(action[attribute] || [])];
     default:
       return state;
   }
@@ -69,20 +78,24 @@ export const createReducer = (initialState, handlers) => {
  * @param setAttribute
  * @returns {Function} - opinionated fetch data setter reducer
  */
-export const createFetchDataSetterReducer = (actionType, initialState = {}, attribute = "payload", setAttribute = "setKey") =>
-  (state = initialState, action) => {
-    if (!action[setAttribute]) {
+export const createFetchDataSetterReducer = (
+  actionType,
+  initialState = {},
+  attribute = 'payload',
+  setAttribute = 'setKey'
+) => (state = initialState, action) => {
+  if (!action[setAttribute]) {
+    return state;
+  }
+  switch (action.type) {
+    case actionType:
+      return {
+        ...state,
+        [action[setAttribute]]: action[attribute]
+      };
+    default:
       return state;
-    }
-    switch (action.type) {
-      case actionType:
-        return {
-          ...state,
-          [action[setAttribute]]: action[attribute]
-        };
-      default:
-        return state;
-    }
-  };
+  }
+};
 
-export const fetchDataSetterReducer = createFetchDataSetterReducer("SET_ITEMS");
+export const fetchDataSetterReducer = createFetchDataSetterReducer('SET_ITEMS');

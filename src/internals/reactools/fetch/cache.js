@@ -31,7 +31,7 @@ export function updateCache(url, options, res, entry) {
   }
 
   // Cache data using url and options as the key
-  cache[JSON.stringify({url, options})] = res;
+  cache[JSON.stringify({ url, options })] = res;
 }
 
 /**
@@ -41,7 +41,7 @@ export function updateCache(url, options, res, entry) {
  * @return {object} - response data
  */
 export function getCachedData(url, options) {
-  return cache[JSON.stringify({url, options})];
+  return cache[JSON.stringify({ url, options })];
 }
 
 /**

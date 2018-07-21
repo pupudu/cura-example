@@ -1,5 +1,5 @@
-import {REDUX_ACTIONS} from '../constants';
-import {getFetchHandler, setupFetch} from './fetchHandlers';
+import { REDUX_ACTIONS } from '../constants';
+import { getFetchHandler, setupFetch } from './fetchHandlers';
 
 /**
  * Create a plain redux middleware to handle fetch calls
@@ -9,9 +9,8 @@ import {getFetchHandler, setupFetch} from './fetchHandlers';
  * @return {function(*=): function(*): Function} redux middleware
  */
 export const createFetchMiddleware = (metadata, options) => {
-
   if (!metadata) {
-    throw new Error("Fetch metadata cannot be empty!");
+    throw new Error('Fetch metadata cannot be empty!');
   }
 
   // setup custom fetch behavior as required
