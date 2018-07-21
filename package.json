@@ -29,6 +29,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint --fix src server",
+    "precommit": "lint-staged",
     "express": "NODE_ENV=production node server/bootstrap.js"
   },
   "devDependencies": {
@@ -42,8 +43,10 @@
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.2",
     "file-loader": "^1.1.11",
+    "husky": "^0.14.3",
     "ignore-styles": "^5.0.1",
     "import-all.macro": "^2.0.3",
+    "lint-staged": "^7.2.0",
     "prettier": "^1.13.7",
     "url-loader": "^1.0.1"
   },
@@ -58,5 +61,8 @@
       "not op_mini all",
       "ie 11"
     ]
+  },
+  "lint-staged": {
+    "(src|server)/**/*.{js,jsx}": ["yarn lint", "git add"]
   }
 }
