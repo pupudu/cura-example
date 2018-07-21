@@ -16,6 +16,6 @@ export default {
         url: "someNewPage"
       }]
     },
-    auth: true // Custom attribute to pass the token to API
+    preProcessors: ['auth'] // Custom attribute to pass the token to API
   }
 }
