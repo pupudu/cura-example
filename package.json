@@ -28,6 +28,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
+    "lint": "eslint --fix src",
     "express": "NODE_ENV=production node server/bootstrap.js"
   },
   "devDependencies": {
@@ -38,9 +39,12 @@
     "axios": "^0.18.0",
     "babel-plugin-dynamic-import-node": "^2.0.0",
     "babel-preset-react-app": "^4.0.0-next.3e165448",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.2",
     "file-loader": "^1.1.11",
     "ignore-styles": "^5.0.1",
     "import-all.macro": "^2.0.3",
+    "prettier": "^1.13.7",
     "url-loader": "^1.0.1"
   },
   "browserslist": {
